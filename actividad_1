@@ -1,0 +1,51 @@
+import json
+import requests
+import os
+
+class Actividad_1():
+    def __init__(self):
+        self.ruta_static = "src/pad/static"
+
+    def leer_api(self, url):
+        """Solicita datos a una API y devuelve la respuesta en formato JSON."""
+        response = requests.get(url)
+        return response.json()
+    
+    def escribir_txt(self, nombre_archivo="", datos=None):
+        """Escribe los datos en un archivo TXT en la carpeta adecuada."""
+        if not nombre_archivo:
+            nombre_archivo = "datos.txt"
+        if datos is None:
+            datos = "No hay datos"
+        
+        ruta_txt = os.path.join(self.ruta_static, "txt", nombre_archivo)
+        carpeta_txt = os.path.dirname(ruta_txt)
+
+        # Asegurarse de que la carpeta exista
+        os.makedirs(carpeta_txt, exist_ok=True)
+
+        # Escribir los datos en el archivo
+        with open(ruta_txt, 'w', encoding="utf-8") as f:
+            json.dump(datos, f, ensure_ascii=False, indent=4)
+        
+        return True  # Retorna True si se crea el archivo correctamente
+
+    def graficar_rectas(self, a, n, x):
+        """Calcula una función matemática con base en los parámetros dados."""
+        f = (a * x) ** n
+        print("función cálculo:", f)
+
+# Crear una instancia de la clase
+ingestion = Actividad_1()
+
+# Obtener datos de la API
+datos_json = ingestion.leer_api("https://dog.ceo/api/breeds/image/random")
+print("Datos JSON:", datos_json)
+
+# Intentar escribir el archivo
+if ingestion.escribir_txt(nombre_archivo="entrega_actividad_1.txt", datos=datos_json):
+    print("Se creó el archivo txt correctamente")
+
+# Generar cálculos con la función graficar_rectas
+for n in range(10):
+    ingestion.graficar_rectas(5, n, 5.4)
